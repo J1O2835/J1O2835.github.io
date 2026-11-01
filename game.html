@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #0a0a0f;
+    background-image:
+      radial-gradient(ellipse at 50% 50%, rgba(30,40,60,0.4) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(80,120,160,0.06) 50px),
+      repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(80,120,160,0.06) 50px);
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Gear decorations */
+  .gear {
+    position: fixed;
+    border: 3px solid rgba(100,140,180,0.15);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+  }
+  .gear::before, .gear::after {
+    content: '';
+    position: absolute;
+    background: rgba(100,140,180,0.1);
+  }
+  .gear::before {
+    width: 100%; height: 3px;
+    top: 50%; left: 0;
+    transform: translateY(-50%);
+  }
+  .gear::after {
+    width: 3px; height: 100%;
+    left: 50%; top: 0;
+    transform: translateX(-50%);
+  }
+  .gear-1 { width: 300px; height: 300px; top: -80px; right: -80px; }
+  .gear-2 { width: 200px; height: 200px; bottom: -50px; left: -50px; animation-direction: reverse; animation-duration: 15s; }
+  .gear-3 { width: 180px; height: 180px; top: 60%; right: 15%; animation-duration: 25s; border-color: rgba(100,140,180,0.08); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Scan line */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(80,180,255,0.3), transparent);
+    animation: scan 4s linear infinite;
+    z-index: 10;
+  }
+  @keyframes scan {
+    0% { top: -2px; }
+    100% { top: 100vh; }
+  }
+
+  /* Corner brackets */
+  .corner {
+    position: fixed;
+    width: 40px; height: 40px;
+    border-color: rgba(80,160,220,0.3);
+    border-style: solid;
+  }
+  .corner-tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 20px; left: 20px; border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; }
+
+  /* Top-left square button */
+  .nav-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a0ccee;
+    background: linear-gradient(135deg, rgba(20,35,55,0.9), rgba(15,25,40,0.95));
+    border: 1px solid rgba(80,160,220,0.35);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 20;
+  }
+  .nav-btn:hover {
+    color: #d0eaff;
+    background: linear-gradient(135deg, rgba(30,55,85,0.95), rgba(20,40,65,0.95));
+    border-color: rgba(80,180,255,0.6);
+    box-shadow: 0 0 30px rgba(80,160,240,0.25), inset 0 0 20px rgba(80,160,240,0.05);
+  }
+  .nav-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 15px rgba(80,160,240,0.3), inset 0 0 30px rgba(80,160,240,0.1);
+  }
+
+  /* Pulsing frame around nav button */
+  .nav-frame {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: 136px;
+    height: 136px;
+    border: 1px solid rgba(80,160,220,0.15);
+    z-index: 19;
+    animation: framePulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes framePulse {
+    from { border-color: rgba(80,160,220,0.1); }
+    to   { border-color: rgba(80,160,220,0.3); }
+  }
+
+  /* Download button */
+  .dl-btn {
+    position: fixed;
+    top: 164px;
+    left: 24px;
+    width: 56px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #a0ccee;
+    background: linear-gradient(135deg, rgba(20,35,55,0.9), rgba(15,25,40,0.95));
+    border: 1px solid rgba(80,160,220,0.35);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+  }
+  .dl-btn:hover {
+    color: #d0eaff;
+    background: linear-gradient(135deg, rgba(30,55,85,0.95), rgba(20,40,65,0.95));
+    border-color: rgba(80,180,255,0.6);
+    box-shadow: 0 0 30px rgba(80,160,240,0.25), inset 0 0 20px rgba(80,160,240,0.05);
+  }
+  .dl-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 15px rgba(80,160,240,0.3), inset 0 0 30px rgba(80,160,240,0.1);
+  }
+
+  /* Readme button */
+  .readme-btn {
+    position: fixed;
+    top: 164px;
+    left: 88px;
+    width: 56px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #a0ccee;
+    background: linear-gradient(135deg, rgba(20,35,55,0.9), rgba(15,25,40,0.95));
+    border: 1px solid rgba(80,160,220,0.35);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 20;
+  }
+  .readme-btn:hover {
+    color: #d0eaff;
+    background: linear-gradient(135deg, rgba(30,55,85,0.95), rgba(20,40,65,0.95));
+    border-color: rgba(80,180,255,0.6);
+    box-shadow: 0 0 30px rgba(80,160,240,0.25), inset 0 0 20px rgba(80,160,240,0.05);
+  }
+  .readme-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 15px rgba(80,160,240,0.3), inset 0 0 30px rgba(80,160,240,0.1);
+  }
+
+  .dl-frame {
+    position: fixed;
+    top: 158px;
+    left: 16px;
+    width: 136px;
+    height: 56px;
+    border: 1px solid rgba(80,160,220,0.15);
+    z-index: 19;
+    animation: framePulse 2s ease-in-out infinite alternate;
+  }
+
+  /* Small decorative dots */
+  .dot {
+    position: fixed;
+    width: 4px; height: 4px;
+    background: rgba(80,160,220,0.3);
+    border-radius: 50%;
+  }
+  .dot-1 { top: 15%; right: 25%; }
+  .dot-2 { top: 70%; left: 80%; }
+  .dot-3 { top: 40%; left: 90%; }
+
+  /* Status bar */
+  .status {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    font-size: 0.65rem;
+    color: rgba(80,160,220,0.3);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="gear gear-1"></div>
+<div class="gear gear-2"></div>
+<div class="gear gear-3"></div>
+
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="dot dot-1"></div>
+<div class="dot dot-2"></div>
+<div class="dot dot-3"></div>
+
+<div class="nav-frame"></div>
+<a class="nav-btn" href="https://j1o2835.github.io/">衰气的狐狸</a>
+
+<div class="dl-frame"></div>
+<button class="dl-btn" onclick="downloadGame()">下 载</button>
+<a class="readme-btn" href="https://github.com/J1O2835/J1O2835.github.io/blob/main/README.md" target="_blank">自 述</a>
+
+<div class="status">GAME MODULE</div>
+
+<script>
+function downloadGame() {
+  var ua = navigator.userAgent;
+  if (/android/i.test(ua)) {
+    window.location.href = 'https://github.com/J1O2835/J1O2835.github.io/releases/download/v1/Android.apk';
+  } else if (/windows/i.test(ua)) {
+    window.location.href = 'https://github.com/J1O2835/J1O2835.github.io/releases/download/v1/windows.exe';
+  } else {
+    alert('暂不支持该系统');
+  }
+}
+</script>
+
+</body>
+</html>

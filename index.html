@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主页</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 18vh;
+    background: #0a0a0f;
+    background-image:
+      radial-gradient(ellipse at 50% 50%, rgba(30,40,60,0.4) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(80,120,160,0.06) 50px),
+      repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(80,120,160,0.06) 50px);
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Gear decorations */
+  .gear {
+    position: fixed;
+    border: 3px solid rgba(100,140,180,0.15);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+  }
+  .gear::before, .gear::after {
+    content: '';
+    position: absolute;
+    background: rgba(100,140,180,0.1);
+  }
+  .gear::before {
+    width: 100%; height: 3px;
+    top: 50%; left: 0;
+    transform: translateY(-50%);
+  }
+  .gear::after {
+    width: 3px; height: 100%;
+    left: 50%; top: 0;
+    transform: translateX(-50%);
+  }
+  .gear-1 { width: 300px; height: 300px; top: -80px; left: -80px; }
+  .gear-2 { width: 200px; height: 200px; bottom: -50px; right: -50px; animation-direction: reverse; animation-duration: 15s; }
+  .gear-3 { width: 150px; height: 150px; top: 20%; right: 10%; animation-duration: 25s; border-color: rgba(100,140,180,0.08); }
+  .gear-4 { width: 250px; height: 250px; bottom: 10%; left: 5%; animation-duration: 30s; border-color: rgba(100,140,180,0.08); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Scan line */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(80,180,255,0.3), transparent);
+    animation: scan 4s linear infinite;
+    z-index: 10;
+  }
+  @keyframes scan {
+    0% { top: -2px; }
+    100% { top: 100vh; }
+  }
+
+  /* Corner brackets */
+  .corner {
+    position: fixed;
+    width: 40px; height: 40px;
+    border-color: rgba(80,160,220,0.3);
+    border-style: solid;
+  }
+  .corner-tl { top: 20px; left: 20px; border-width: 2px 0 0 2px; }
+  .corner-tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 20px; left: 20px; border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; }
+
+  .content {
+    text-align: center;
+    z-index: 5;
+    position: relative;
+  }
+
+  .title {
+    font-size: 5rem;
+    font-weight: 900;
+    color: #c0d8ef;
+    text-shadow:
+      0 0 10px rgba(80,160,240,0.5),
+      0 0 40px rgba(80,160,240,0.2),
+      0 0 80px rgba(80,160,240,0.1);
+    letter-spacing: 0.3em;
+    margin-bottom: 60px;
+    position: relative;
+    animation: titleGlow 3s ease-in-out infinite alternate;
+  }
+  .title::before, .title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(80,160,220,0.5));
+  }
+  .title::before { right: 100%; margin-right: 20px; }
+  .title::after { left: 100%; margin-left: 20px; background: linear-gradient(270deg, transparent, rgba(80,160,220,0.5)); }
+
+  @keyframes titleGlow {
+    from { text-shadow: 0 0 10px rgba(80,160,240,0.5), 0 0 40px rgba(80,160,240,0.2); }
+    to   { text-shadow: 0 0 15px rgba(80,160,240,0.7), 0 0 60px rgba(80,160,240,0.3), 0 0 100px rgba(80,160,240,0.15); }
+  }
+
+  .btn-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Hex frame behind button */
+  .btn-frame {
+    position: absolute;
+    inset: -12px;
+    border: 1px solid rgba(80,160,220,0.2);
+    border-radius: 8px;
+    animation: framePulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes framePulse {
+    from { border-color: rgba(80,160,220,0.15); box-shadow: 0 0 10px rgba(80,160,240,0.05); }
+    to   { border-color: rgba(80,160,220,0.35); box-shadow: 0 0 25px rgba(80,160,240,0.15); }
+  }
+
+  .btn {
+    position: relative;
+    display: inline-block;
+    padding: 16px 48px;
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #a0ccee;
+    background: linear-gradient(135deg, rgba(20,35,55,0.9), rgba(15,25,40,0.95));
+    border: 1px solid rgba(80,160,220,0.35);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  }
+  .btn:hover {
+    color: #d0eaff;
+    background: linear-gradient(135deg, rgba(30,55,85,0.95), rgba(20,40,65,0.95));
+    border-color: rgba(80,180,255,0.6);
+    box-shadow: 0 0 30px rgba(80,160,240,0.25), inset 0 0 20px rgba(80,160,240,0.05);
+    transform: scale(1.03);
+  }
+  .btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 15px rgba(80,160,240,0.3), inset 0 0 30px rgba(80,160,240,0.1);
+  }
+
+  /* Small decorative dots */
+  .dot {
+    position: fixed;
+    width: 4px; height: 4px;
+    background: rgba(80,160,220,0.3);
+    border-radius: 50%;
+  }
+  .dot-1 { top: 15%; left: 25%; }
+  .dot-2 { top: 70%; left: 80%; }
+  .dot-3 { top: 40%; left: 90%; }
+  .dot-4 { top: 85%; left: 15%; }
+
+  /* Status bar */
+  .status {
+    position: fixed;
+    bottom: 30px;
+    font-size: 0.65rem;
+    color: rgba(80,160,220,0.3);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="gear gear-1"></div>
+<div class="gear gear-2"></div>
+<div class="gear gear-3"></div>
+<div class="gear gear-4"></div>
+
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="dot dot-1"></div>
+<div class="dot dot-2"></div>
+<div class="dot dot-3"></div>
+<div class="dot dot-4"></div>
+
+<div class="content">
+  <h1 class="title">主 页</h1>
+  <div class="btn-wrap">
+    <div class="btn-frame"></div>
+    <a class="btn" href="game.html">游 戏</a>
+  </div>
+</div>
+
+<div class="status">SYSTEM ONLINE</div>
+
+</body>
+</html>
